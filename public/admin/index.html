@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Category Admin</title>
+    <style>
+      body{font-family:Arial,Helvetica,sans-serif;padding:12px}
+      .row{display:flex;gap:12px}
+      .col{flex:1}
+      table{width:100%;border-collapse:collapse}
+      th,td{border:1px solid #ddd;padding:8px}
+      tr.dragging{opacity:0.5}
+      .active{color:green}
+      .inactive{color:#999}
+    </style>
+  </head>
+  <body>
+    <h2>Categories Admin</h2>
+    <div class="row">
+      <div class="col">
+        <button id="refresh">Refresh</button>
+        <button id="openCreate">Create</button>
+        <button id="bulkDisable">Disable Selected</button>
+        <button id="bulkEnable">Enable Selected</button>
+        <table id="table">
+          <thead><tr><th></th><th>Icon</th><th>Name</th><th>Count</th><th>Active</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div style="width:320px">
+        <h3>Editor</h3>
+        <form id="form">
+          <input type="hidden" id="id" />
+          <div><label>Name</label><br/><input id="name" style="width:100%"/></div>
+          <div><label>Description</label><br/><textarea id="description" style="width:100%"></textarea></div>
+          <div><label>Icon URL</label><br/><input id="iconUrl" style="width:100%"/></div>
+          <div><label>Active</label> <input type="checkbox" id="active"/></div>
+          <div style="margin-top:8px"><button type="submit">Save</button> <button id="cancel">Cancel</button></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="/admin/app.js"></script>
+  </body>
+</html>
