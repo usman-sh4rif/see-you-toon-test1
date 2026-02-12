@@ -7,16 +7,19 @@ import { CategoryService } from './category.service';
 import { ContentService } from '../content/content.service';
 import { InMemoryCategoryRepository } from './repository/in-memory-category.repository';
 import { TypeOrmCategoryRepository } from './repository/typeorm-category.repository';
+import { AppCacheModule } from '../cache/cache.module';
+import { CacheInvalidationService } from '../cache/cache-invalidation.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Content])],
+  imports: [TypeOrmModule.forFeature([Category, Content]), AppCacheModule],
   controllers: [CategoryController],
   providers: [
     CategoryService,
     ContentService,
+    CacheInvalidationService,
     // keep token `InMemoryCategoryRepository` for backwards compatibility but provide TypeOrm implementation
     { provide: InMemoryCategoryRepository, useClass: TypeOrmCategoryRepository },
   ],
-  exports: [CategoryService],
+  exports: [CategoryService, CacheInvalidationService],
 })
 export class CategoryModule {}
