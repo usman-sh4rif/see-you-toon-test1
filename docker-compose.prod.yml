@@ -1,0 +1,121 @@
+version: '3.9'
+
+# Production-ready overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# 
+# This file demonstrates production configurations:
+# - Resource limits
+# - Enhanced security
+# - Optimized logging
+# - Health checks
+# - Restart policies
+
+services:
+  redis:
+    # Remove exposed ports in production
+    ports: []
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    
+    # Enhanced restart policy
+    restart: always
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mysql:
+    # Remove exposed ports in production
+    ports: []
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # Enhanced restart policy
+    restart: always
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+    
+    # Additional production settings
+    environment:
+      # Production database settings
+      MYSQL_REQUIRE_SSL: "YES"
+      MYSQL_REQUIRE_REQUIRE_SECURE_TRANSPORT: "ON"
+
+  app:
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Enhanced restart policy
+    restart: always
+    
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    read_only_root_filesystem: true
+    
+    # Temporary filesystem for Node
+    tmpfs:
+      - /tmp
+      - /app/dist
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "app=see-you-toon"
+    
+    # Labels for monitoring/orchestration
+    labels:
+      - "app.version=1.0.0"
+      - "app.environment=production"
+      - "com.example.monitoring=enabled"
+    
+    # Production environment overrides
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      # Additional production vars
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_WINDOW_MS: "900000"
+      RATE_LIMIT_MAX_REQUESTS: "100"
